@@ -24,7 +24,9 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VectorIconsModule extends ReactContextBaseJavaModule {
+public class VectorIconsModuleImpl {
+
+    private ReactApplicationContext context;
 
   private static final Map<String, Typeface> sTypefaceCache = new HashMap<String, Typeface>();
 
@@ -34,17 +36,11 @@ public class VectorIconsModule extends ReactContextBaseJavaModule {
     String E_UNKNOWN_ERROR = "E_UNKNOWN_ERROR";
   }
 
-  @Override
-  public String getName() {
-    return REACT_CLASS;
-  }
-
-  public VectorIconsModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-  }
-
+    VectorIconsModuleImpl(ReactApplicationContext context) {
+        this.context = context;
+    }
+    
   protected String createGlyphImagePath(String fontFamily, String glyph, Integer fontSize, Integer color) throws java.io.IOException, FileNotFoundException {
-    Context context = getReactApplicationContext();
     File cacheFolder = context.getCacheDir();
     String cacheFolderPath = cacheFolder.getAbsolutePath() + "/";
 
@@ -100,7 +96,6 @@ public class VectorIconsModule extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod
   public void getImageForFont(String fontFamily, String glyph, Integer fontSize, Integer color, final Promise promise) {
     try {
       String imagePath = createGlyphImagePath(fontFamily, glyph, fontSize, color);
@@ -110,7 +105,6 @@ public class VectorIconsModule extends ReactContextBaseJavaModule {
     }
   }
 
-  @ReactMethod(isBlockingSynchronousMethod = true)
   public String getImageForFontSync(String fontFamily, String glyph, Integer fontSize, Integer color) {
     try {
       return createGlyphImagePath(fontFamily, glyph, fontSize, color);
